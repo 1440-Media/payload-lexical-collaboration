@@ -1,10 +1,13 @@
 'use client'
 
+import type { LexicalEditor, RangeSelection } from '@payloadcms/richtext-lexical/lexical'
+
 import { useCallback } from 'react'
-import type { LexicalEditor } from '@payloadcms/richtext-lexical/lexical'
+
+import type { CommentStore } from '../store.js'
 import type { Comment, MarkNodeMapType, Thread } from '../types/core.js'
 import type { CommentOperationsResult } from '../types/hooks.js'
-import type { CommentStore } from '../store.js'
+
 import { commentOperations } from '../services/commentOperations.js'
 
 /**
@@ -19,7 +22,7 @@ export function useCommentOperations(
   commentStore: CommentStore,
   editor: LexicalEditor,
   markNodeMap: MarkNodeMapType,
-  saveDocument: () => Promise<void | boolean>
+  saveDocument: () => Promise<boolean | void>
 ): CommentOperationsResult {
   // Delete a comment or thread
   const deleteCommentOrThread = useCallback(
@@ -42,7 +45,7 @@ export function useCommentOperations(
       commentOrThread: Comment | Thread,
       isInlineComment: boolean,
       thread?: Thread,
-      selection?: any,
+      selection?: null | RangeSelection,
     ) => {
       return commentOperations.submitAddComment(
         commentStore,
@@ -71,8 +74,8 @@ export function useCommentOperations(
   )
 
   return {
+    deleteAllComments,
     deleteCommentOrThread,
     submitAddComment,
-    deleteAllComments,
   }
 }

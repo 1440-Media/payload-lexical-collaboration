@@ -1,13 +1,15 @@
 'use client'
 
 import type { LexicalEditor } from '@payloadcms/richtext-lexical/lexical'
+
 import type { Comment, CommentDeletionResult, Comments, Thread } from './types/core.js'
 import type { CommentStoreInterface } from './types/store.js'
-import { cloneThread, markDeleted } from './utils/factory.js'
+
 import { commentService } from './api/commentService.js'
 import { isCommentDuplicateInThread, isThreadDuplicate } from './utils/comments.js'
-import { getDocumentIdFromUrl } from './utils/url.js'
 import { withErrorHandling } from './utils/errorHandling.js'
+import { cloneThread, markDeleted } from './utils/factory.js'
+import { getDocumentIdFromUrl } from './utils/url.js'
 
 /**
  * Helper function to trigger onChange listeners
@@ -23,21 +25,14 @@ function triggerOnChange(commentStore: CommentStore): void {
  * Store for managing comments and threads
  */
 export class CommentStore implements CommentStoreInterface {
-  _editor: LexicalEditor
-  _comments: Comments
   _changeListeners: Set<() => void>
+  _comments: Comments
+  _editor: LexicalEditor
 
   constructor(editor: LexicalEditor) {
     this._comments = []
     this._editor = editor
     this._changeListeners = new Set()
-  }
-
-  /**
-   * Get all comments and threads
-   */
-  getComments(): Comments {
-    return this._comments
   }
 
   /**
@@ -58,7 +53,7 @@ export class CommentStore implements CommentStoreInterface {
           const newThread = cloneThread(comment)
           
           // Check if this comment already exists in the thread
-          const isDuplicate = isCommentDuplicateInThread(newThread, commentOrThread as Comment)
+          const isDuplicate = isCommentDuplicateInThread(newThread, commentOrThread)
           
           if (!isDuplicate) {
             nextComments.splice(i, 1, newThread)
@@ -73,7 +68,7 @@ export class CommentStore implements CommentStoreInterface {
       // Adding a new thread or standalone comment
       if (commentOrThread.type === 'thread') {
         // Check if this thread already exists
-        const isDuplicate = isThreadDuplicate(nextComments, commentOrThread as Thread)
+        const isDuplicate = isThreadDuplicate(nextComments, commentOrThread)
         
         if (!isDuplicate) {
           const insertOffset = offset !== undefined ? offset : nextComments.length
@@ -90,6 +85,14 @@ export class CommentStore implements CommentStoreInterface {
   }
 
   /**
+   * Delete all comments and threads from the store
+   */
+  deleteAllComments(): void {
+    this._comments = []
+    triggerOnChange(this)
+  }
+
+  /**
    * Delete a comment or thread from the store
    */
   deleteCommentOrThread(
@@ -97,7 +100,7 @@ export class CommentStore implements CommentStoreInterface {
     thread?: Thread,
   ): CommentDeletionResult | null {
     const nextComments = Array.from(this._comments)
-    let commentIndex: number | null = null
+    let commentIndex: null | number = null
 
     if (thread !== undefined) {
       for (let i = 0; i < nextComments.length; i++) {
@@ -121,7 +124,7 @@ export class CommentStore implements CommentStoreInterface {
     if (commentOrThread.type === 'comment') {
       return {
         index: commentIndex as number,
-        markedComment: markDeleted(commentOrThread as Comment),
+        markedComment: markDeleted(commentOrThread),
       }
     }
 
@@ -129,22 +132,10 @@ export class CommentStore implements CommentStoreInterface {
   }
 
   /**
-   * Delete all comments and threads from the store
+   * Get all comments and threads
    */
-  deleteAllComments(): void {
-    this._comments = []
-    triggerOnChange(this)
-  }
-
-  /**
-   * Register a callback to be called when the store changes
-   */
-  registerOnChange(onChange: () => void): () => void {
-    const changeListeners = this._changeListeners
-    changeListeners.add(onChange)
-    return () => {
-      changeListeners.delete(onChange)
-    }
+  getComments(): Comments {
+    return this._comments
   }
 
   /**
@@ -168,6 +159,17 @@ export class CommentStore implements CommentStoreInterface {
       'Error loading comments',
       undefined
     )
+  }
+
+  /**
+   * Register a callback to be called when the store changes
+   */
+  registerOnChange(onChange: () => void): () => void {
+    const changeListeners = this._changeListeners
+    changeListeners.add(onChange)
+    return () => {
+      changeListeners.delete(onChange)
+    }
   }
 
   /**

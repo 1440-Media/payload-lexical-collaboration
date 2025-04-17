@@ -21,26 +21,26 @@ export const formatTimeAgo = (timestamp: number): string => {
   const seconds = Math.round(diffInMs / 1000);
   
   // Just now for very recent comments
-  if (seconds < 10) return 'Just now';
+  if (seconds < 10) {return 'Just now';}
   
   // Less than a minute
-  if (seconds < 60) return rtf.format(-seconds, 'second');
+  if (seconds < 60) {return rtf.format(-seconds, 'second');}
   
   // Less than an hour
   const minutes = Math.round(seconds / 60);
-  if (minutes < 60) return rtf.format(-minutes, 'minute');
+  if (minutes < 60) {return rtf.format(-minutes, 'minute');}
   
   // Less than a day
   const hours = Math.round(minutes / 60);
-  if (hours < 24) return rtf.format(-hours, 'hour');
+  if (hours < 24) {return rtf.format(-hours, 'hour');}
   
   // Less than a month (approx)
   const days = Math.round(hours / 24);
-  if (days < 30) return rtf.format(-days, 'day');
+  if (days < 30) {return rtf.format(-days, 'day');}
   
   // Less than a year
   const months = Math.round(days / 30);
-  if (months < 12) return rtf.format(-months, 'month');
+  if (months < 12) {return rtf.format(-months, 'month');}
   
   // Years
   const years = Math.round(months / 12);

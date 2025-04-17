@@ -1,21 +1,21 @@
 'use client'
 
 import type { NodeKey } from '@payloadcms/richtext-lexical/lexical'
-import type { CommentPluginProps } from '../../types/props.js'
 
+import { useLexicalComposerContext } from '@payloadcms/richtext-lexical/lexical/react/LexicalComposerContext'
 import React, { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { useLexicalComposerContext } from '@payloadcms/richtext-lexical/lexical/react/LexicalComposerContext'
 
+import type { CommentPluginProps } from '../../types/props.js'
+
+import { useCommentCommands } from '../../hooks/editor/useCommentCommands.js'
+import { useCommentMarks } from '../../hooks/editor/useCommentMarks.js'
+import { useCommentOperations } from '../../hooks/useCommentOperations.js'
+import { useDocumentOperations } from '../../hooks/useDocumentOperations.js'
 import { CommentStore, useCommentStore } from '../../store.js'
 import { AddCommentBox } from '../input/AddCommentBox.js'
 import { CommentInputBox } from '../input/CommentInputBox.js'
 import { CommentsPanel } from './CommentPanel.js'
-import { useCommentMarks } from '../../hooks/editor/useCommentMarks.js'
-import { useCommentCommands } from '../../hooks/editor/useCommentCommands.js'
-import { useDocumentOperations } from '../../hooks/useDocumentOperations.js'
-import { useCommentOperations } from '../../hooks/useCommentOperations.js'
-
 import '../ui/CommentPlugin.css'
 
 /**
@@ -25,8 +25,8 @@ import '../ui/CommentPlugin.css'
  * including adding, viewing, and deleting comments.
  */
 export const CommentPlugin: React.FC<CommentPluginProps> = ({
-  documentId = 'default',
   currentUser,
+  documentId = 'default',
 }) => {
   // Editor context
   const [editor] = useLexicalComposerContext()
@@ -44,7 +44,7 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
   // Custom hooks
   const markNodeMap = useCommentMarks(editor, setActiveIDs, setActiveAnchorKey)
   const { isDocumentSaved, saveDocument } = useDocumentOperations(editor, documentId)
-  const { deleteCommentOrThread, submitAddComment, deleteAllComments } = useCommentOperations(
+  const { deleteAllComments, deleteCommentOrThread, submitAddComment } = useCommentOperations(
     commentStore, 
     editor, 
     markNodeMap, 
@@ -96,12 +96,12 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
       {isDocumentSaved && showCommentInput &&
         createPortal(
           <CommentInputBox
-            editor={editor}
-            cancelAddComment={cancelAddComment}
-            submitAddComment={submitAddComment}
             author={currentUser}
+            cancelAddComment={cancelAddComment}
+            editor={editor}
             setActiveAnchorKey={setActiveAnchorKey}
             setShowCommentInput={setShowCommentInput}
+            submitAddComment={submitAddComment}
           />,
           document.body,
         )}
@@ -117,12 +117,12 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
         )}
       {isDocumentSaved && createPortal(
         <button
+          aria-label={showComments ? 'Hide Comments' : 'Show Comments'}
           className={`CommentPlugin_ShowCommentsButton ${
             showComments ? 'active' : ''
           }`}
           onClick={toggleComments}
           title={showComments ? 'Hide Comments' : 'Show Comments'}
-          aria-label={showComments ? 'Hide Comments' : 'Show Comments'}
         >
           <i className="comments" />
         </button>,
@@ -131,13 +131,13 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
       {isDocumentSaved && showComments &&
         createPortal(
           <CommentsPanel
-            comments={comments}
-            submitAddComment={submitAddComment}
-            deleteCommentOrThread={deleteCommentOrThread}
-            deleteAllComments={deleteAllComments}
             activeIDs={activeIDs}
-            markNodeMap={markNodeMap}
+            comments={comments}
             currentUser={currentUser}
+            deleteAllComments={deleteAllComments}
+            deleteCommentOrThread={deleteCommentOrThread}
+            markNodeMap={markNodeMap}
+            submitAddComment={submitAddComment}
           />,
           document.body,
         )}

@@ -1,7 +1,8 @@
 'use client'
 
-import type { Comment, Thread } from '../types/core.js'
 import type { ErrorResponse } from '../types/api.js'
+import type { Comment, Thread } from '../types/core.js'
+
 import { APIUtils } from './api.js'
 
 /**
@@ -33,6 +34,6 @@ export function isThreadDuplicate(comments: (Comment | Thread)[], thread: Thread
  * @returns A standardized error object
  * @deprecated Use APIUtils.createErrorResponse instead
  */
-export function createErrorResponse(message: string, details?: any): ErrorResponse {
+export function createErrorResponse(message: string, details?: Record<string, unknown>): ErrorResponse {
   return APIUtils.createErrorResponse(message, details)
 }

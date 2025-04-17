@@ -3,16 +3,16 @@
 import React, { useState } from 'react'
 
 type CommentComposerProps = {
-  submitAddComment: (content: string) => void
   placeholder?: string
+  submitAddComment: (content: string) => void
 }
 
 /**
  * Component for composing and submitting new comments
  */
 export const CommentComposer: React.FC<CommentComposerProps> = ({
-  submitAddComment,
   placeholder = 'Type a comment...',
+  submitAddComment,
 }) => {
   const [content, setContent] = useState('')
   const [canSubmit, setCanSubmit] = useState(false)
@@ -42,16 +42,16 @@ export const CommentComposer: React.FC<CommentComposerProps> = ({
     <div className="CommentPlugin_CommentsPanel_Composer">
       <textarea
         className="CommentPlugin_CommentsPanel_Editor"
-        placeholder={placeholder}
-        value={content}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
+        placeholder={placeholder}
+        value={content}
       />
       <button
-        onClick={handleSubmit}
-        disabled={!canSubmit}
-        className="CommentPlugin_CommentsPanel_SendButton"
         aria-label="Send comment"
+        className="CommentPlugin_CommentsPanel_SendButton"
+        disabled={!canSubmit}
+        onClick={handleSubmit}
       >
         <i className="send" />
       </button>

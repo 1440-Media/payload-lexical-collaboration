@@ -19,12 +19,12 @@ export type Thread = {
   type: 'thread'
 }
 
-export type Comments = Array<Thread | Comment>
+export type Comments = Array<Comment | Thread>
 
 // Operation result types
 export type CommentDeletionResult = {
-  markedComment: Comment
   index: number
+  markedComment: Comment
 }
 
 // Map types

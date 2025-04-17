@@ -3,6 +3,7 @@
  */
 
 import type { LexicalEditor, NodeKey, RangeSelection } from '@payloadcms/richtext-lexical/lexical'
+
 import type { Comment, Comments, MarkNodeMapType, Thread } from './core.js'
 
 /**
@@ -10,15 +11,15 @@ import type { Comment, Comments, MarkNodeMapType, Thread } from './core.js'
  */
 export type CommentPluginProps = {
   /**
+   * Current user's identifier (typically email)
+   */
+  currentUser: string
+  
+  /**
    * ID of the document to load comments for
    * @default 'default'
    */
   documentId?: string
-  
-  /**
-   * Current user's identifier (typically email)
-   */
-  currentUser: string
 }
 
 /**
@@ -26,9 +27,9 @@ export type CommentPluginProps = {
  */
 export type CommentInputBoxProps = {
   /**
-   * The Lexical editor instance
+   * Author of the comment (typically user email)
    */
-  editor: LexicalEditor
+  author: string
   
   /**
    * Function to cancel adding a comment
@@ -36,19 +37,9 @@ export type CommentInputBoxProps = {
   cancelAddComment: () => void
   
   /**
-   * Function to submit a new comment
+   * The Lexical editor instance
    */
-  submitAddComment: (
-    commentOrThread: Comment | Thread,
-    isInlineComment: boolean,
-    thread?: Thread,
-    selection?: RangeSelection | null,
-  ) => void
-  
-  /**
-   * Author of the comment (typically user email)
-   */
-  author: string
+  editor: LexicalEditor
   
   /**
    * Function to set the active anchor key
@@ -59,6 +50,16 @@ export type CommentInputBoxProps = {
    * Function to show/hide the comment input
    */
   setShowCommentInput: (show: boolean) => void
+  
+  /**
+   * Function to submit a new comment
+   */
+  submitAddComment: (
+    commentOrThread: Comment | Thread,
+    isInlineComment: boolean,
+    thread?: Thread,
+    selection?: null | RangeSelection,
+  ) => Promise<void>
 }
 
 /**
@@ -76,17 +77,22 @@ export type CommentsPanelProps = {
   comments: Comments
   
   /**
+   * Current user's identifier (typically email)
+   */
+  currentUser: string
+  
+  /**
+   * Function to delete all comments
+   */
+  deleteAllComments?: () => Promise<boolean>
+  
+  /**
    * Function to delete a comment or thread
    */
   deleteCommentOrThread: (
     commentOrThread: Comment | Thread,
     thread?: Thread,
   ) => void
-  
-  /**
-   * Function to delete all comments
-   */
-  deleteAllComments?: () => Promise<boolean>
   
   /**
    * Map of mark node keys to IDs
@@ -100,12 +106,8 @@ export type CommentsPanelProps = {
     commentOrThread: Comment | Thread,
     isInlineComment: boolean,
     thread?: Thread,
-  ) => void
-  
-  /**
-   * Current user's identifier (typically email)
-   */
-  currentUser: string
+    selection?: null | RangeSelection,
+  ) => Promise<void>
 }
 
 /**
@@ -140,12 +142,7 @@ export type CommentItemProps = {
   /**
    * Function to delete a comment
    */
-  deleteComment: (comment: Comment) => void
-  
-  /**
-   * Whether the comment is by the current user
-   */
-  isAuthor: boolean
+  onDelete?: () => void
 }
 
 /**
@@ -153,36 +150,34 @@ export type CommentItemProps = {
  */
 export type ThreadItemProps = {
   /**
-   * The thread to display
-   */
-  thread: Thread
-  
-  /**
-   * Function to delete a comment or thread
-   */
-  deleteCommentOrThread: (
-    commentOrThread: Comment | Thread,
-    thread?: Thread,
-  ) => void
-  
-  /**
-   * Function to submit a new comment
-   */
-  submitAddComment: (
-    commentOrThread: Comment | Thread,
-    isInlineComment: boolean,
-    thread?: Thread,
-  ) => void
-  
-  /**
-   * Current user's identifier (typically email)
-   */
-  currentUser: string
-  
-  /**
    * Whether the thread is active
    */
   isActive: boolean
+  
+  /**
+   * Whether the thread is interactive
+   */
+  isInteractive: boolean
+  
+  /**
+   * Function to delete a comment
+   */
+  onDeleteComment: (commentId: string, thread: Thread) => void
+  
+  /**
+   * Function to delete a thread
+   */
+  onDeleteThread: (thread: Thread) => void
+  
+  /**
+   * Function to submit a reply
+   */
+  onSubmitReply: (content: string, thread: Thread) => void
+  
+  /**
+   * The thread to display
+   */
+  thread: Thread
 }
 
 /**
@@ -200,19 +195,14 @@ export type TimeAgoProps = {
  */
 export type CommentComposerProps = {
   /**
+   * Placeholder text for the textarea
+   */
+  placeholder?: string
+  
+  /**
    * Function to submit a new comment
    */
   submitAddComment: (content: string) => void
-  
-  /**
-   * Function to cancel adding a comment
-   */
-  cancelAddComment: () => void
-  
-  /**
-   * Initial content for the composer
-   */
-  initialContent?: string
 }
 
 /**

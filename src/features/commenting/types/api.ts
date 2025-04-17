@@ -2,45 +2,54 @@
  * API-related types for the commenting feature
  */
 
+/**
+ * Represents a range selection in the editor
+ */
+export type CommentRange = {
+  endContainer?: string
+  endOffset: number
+  startContainer?: string
+  startOffset: number
+}
 
 /**
  * Standard Payload CMS API response format
  */
 export type PayloadAPIResponse<T> = {
   docs: T[]
-  totalDocs: number
+  hasNextPage: boolean
+  hasPrevPage: boolean
   limit: number
-  totalPages: number
+  nextPage: null | number
   page: number
   pagingCounter: number
-  hasPrevPage: boolean
-  hasNextPage: boolean
-  prevPage: number | null
-  nextPage: number | null
+  prevPage: null | number
+  totalDocs: number
+  totalPages: number
 }
 
 /**
  * Comment entity as returned from the Payload API
  */
 export type CommentAPIEntity = {
-  id: string
-  documentId: string
-  threadId?: string
+  author: { email: string; id: string } | string
   content: string
-  author: string | { id: string; email: string }
-  quote?: string
-  range?: any
   createdAt: string
-  updatedAt: string
+  documentId: string
+  id: string
+  quote?: string
+  range?: CommentRange
   resolved: boolean
+  threadId?: string
+  updatedAt: string
 }
 
 /**
  * User entity as returned from the Payload API
  */
 export type UserAPIEntity = {
-  id: string
   email: string
+  id: string
   // other user fields as needed
 }
 
@@ -48,20 +57,20 @@ export type UserAPIEntity = {
  * Request to save a comment
  */
 export type SaveCommentRequest = {
-  documentId: string
-  threadId?: string
-  content: string
   author: string
+  content: string
+  documentId: string
   quote?: string
-  range?: any
+  range?: CommentRange
+  threadId?: string
 }
 
 /**
  * Standard error response
  */
 export type ErrorResponse = {
+  details?: Record<string, unknown>
   error: string
-  details?: any
 }
 
 /**

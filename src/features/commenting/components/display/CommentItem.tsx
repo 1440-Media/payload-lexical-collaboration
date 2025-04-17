@@ -1,7 +1,9 @@
 'use client'
 
 import React from 'react'
+
 import type { Comment } from '../../types/core.js'
+
 import { TimeAgo } from './TimeAgo.js'
 
 type CommentItemProps = {
@@ -32,9 +34,9 @@ export const CommentItem: React.FC<CommentItemProps> = ({ comment, onDelete }) =
       </p>
       {!comment.deleted && onDelete && (
         <button
-          onClick={onDelete}
-          className="CommentPlugin_CommentsPanel_List_DeleteButton"
           aria-label="Delete comment"
+          className="CommentPlugin_CommentsPanel_List_DeleteButton"
+          onClick={onDelete}
         >
           <i className="delete" />
         </button>

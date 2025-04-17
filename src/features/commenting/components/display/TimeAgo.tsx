@@ -1,18 +1,19 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+
 import { formatTimeAgo } from '../../utils/time.js'
 
 type TimeAgoProps = {
-  timestamp: number
   className?: string
+  timestamp: number
 }
 
 /**
  * Component for displaying relative time (e.g., "5 min ago")
  * Automatically updates periodically
  */
-export const TimeAgo: React.FC<TimeAgoProps> = ({ timestamp, className = '' }) => {
+export const TimeAgo: React.FC<TimeAgoProps> = ({ className = '', timestamp }) => {
   const [, setCounter] = useState(0)
 
   // Update the component periodically to keep the time display fresh

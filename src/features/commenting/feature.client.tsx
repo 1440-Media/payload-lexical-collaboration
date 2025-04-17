@@ -1,14 +1,15 @@
 'use client'
 
 import { createClientFeature } from '@payloadcms/richtext-lexical/client'
-import { useAuth } from '@payloadcms/ui'
 import { MarkNode } from '@payloadcms/richtext-lexical/lexical/mark'
+import { useAuth } from '@payloadcms/ui'
 
-import { CommentPlugin } from './components/core/CommentPlugin.js'
+import type { CommentClientFeatureProps } from './types/props.js'
+
 import { INSERT_COMMENT_COMMAND, TOGGLE_COMMENTS_COMMAND } from './command.js'
+import { CommentPlugin } from './components/core/CommentPlugin.js'
 import { CommentIcon, CommentMarkStyles } from './components/ui/index.js'
 import { getDocumentIdFromUrl } from './utils/url.js'
-import { CommentClientFeatureProps } from './types/props.js'
 
 export const CommentClientFeature = createClientFeature<CommentClientFeatureProps>(
   ({ props }) => {
@@ -52,8 +53,8 @@ export const CommentClientFeature = createClientFeature<CommentClientFeatureProp
               <>
                 <CommentMarkStyles enabled={true} />
                 <CommentPlugin 
-                  documentId={documentId} 
                   currentUser={currentUser} 
+                  documentId={documentId} 
                 />
               </>
             )

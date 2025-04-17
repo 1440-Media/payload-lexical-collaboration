@@ -1,11 +1,12 @@
 'use client'
 
+import React, { useEffect, useRef, useState } from 'react'
+
 import type { Comment, Thread } from '../../types/core.js'
 import type { CommentsPanelProps } from '../../types/props.js'
 
-import React, { useEffect, useRef, useState } from 'react'
+import { confirmDeleteAllComments, confirmDeleteComment, confirmDeleteThread } from '../../utils/dialog.js'
 import { createComment } from '../../utils/factory.js'
-import { confirmDeleteComment, confirmDeleteThread, confirmDeleteAllComments } from '../../utils/dialog.js'
 import { CommentItem } from '../display/CommentItem.js'
 import { ThreadItem } from '../display/ThreadItem.js'
 
@@ -15,18 +16,18 @@ import { ThreadItem } from '../display/ThreadItem.js'
 export const CommentsPanel: React.FC<CommentsPanelProps> = ({
   activeIDs,
   comments,
-  deleteCommentOrThread,
+  currentUser,
   deleteAllComments,
+  deleteCommentOrThread,
   markNodeMap,
   submitAddComment,
-  currentUser,
 }) => {
   const listRef = useRef<HTMLUListElement>(null)
   const [showDeleteDropdown, setShowDeleteDropdown] = useState(false)
   const isEmpty = comments.length === 0
 
   const handleDeleteComment = (commentId: string, thread?: Thread) => {
-    if (!confirmDeleteComment()) return
+    if (!confirmDeleteComment()) {return}
     
     // Find the comment in the thread or standalone
     const comment = thread 
@@ -83,18 +84,18 @@ export const CommentsPanel: React.FC<CommentsPanelProps> = ({
         {!isEmpty && deleteAllComments && (
           <div className="CommentPlugin_CommentsPanel_DeleteContainer">
             <button
-              onClick={toggleDeleteDropdown}
-              className="CommentPlugin_CommentsPanel_DeleteIcon"
               aria-label="Delete options"
+              className="CommentPlugin_CommentsPanel_DeleteIcon"
+              onClick={toggleDeleteDropdown}
             >
               <i className="delete" />
             </button>
             {showDeleteDropdown && (
               <div className="CommentPlugin_CommentsPanel_DeleteDropdown">
                 <button
-                  onClick={handleDeleteAllComments}
-                  className="CommentPlugin_CommentsPanel_DeleteAllButton"
                   aria-label="Delete all comments"
+                  className="CommentPlugin_CommentsPanel_DeleteAllButton"
+                  onClick={handleDeleteAllComments}
                 >
                   Delete All
                 </button>
@@ -114,13 +115,13 @@ export const CommentsPanel: React.FC<CommentsPanelProps> = ({
               const thread = commentOrThread
               return (
                 <ThreadItem
-                  key={id}
-                  thread={thread}
                   isActive={activeIDs.includes(id)}
                   isInteractive={markNodeMap.has(id)}
-                  onDeleteThread={handleDeleteThread}
+                  key={id}
                   onDeleteComment={(commentId) => handleDeleteComment(commentId, thread)}
+                  onDeleteThread={handleDeleteThread}
                   onSubmitReply={(content) => handleSubmitReply(content, thread)}
+                  thread={thread}
                 />
               )
             }
@@ -128,8 +129,8 @@ export const CommentsPanel: React.FC<CommentsPanelProps> = ({
             // Handle standalone comments (not in a thread)
             return (
               <CommentItem
-                key={id}
                 comment={commentOrThread}
+                key={id}
                 onDelete={
                   !commentOrThread.deleted
                     ? () => handleDeleteComment(commentOrThread.id)

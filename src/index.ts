@@ -21,20 +21,20 @@ export const payloadLexicalCollaboration =
     // Add the comments collection
     config.collections.push({
       slug: 'lexical-collaboration-plugin-comments',
-      admin: {
-        useAsTitle: 'content',
-        defaultColumns: ['content', 'author', 'createdAt'],
-        hidden: true,
-      },
       access: {
         read: () => true,
+      },
+      admin: {
+        defaultColumns: ['content', 'author', 'createdAt'],
+        hidden: true,
+        useAsTitle: 'content',
       },
       fields: [
         {
           name: 'documentId',
           type: 'text',
-          required: true,
           index: true,
+          required: true,
         },
         {
           name: 'threadId',

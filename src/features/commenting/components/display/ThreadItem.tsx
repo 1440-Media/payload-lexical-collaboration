@@ -1,29 +1,31 @@
 'use client'
 
 import React from 'react'
+
 import type { Thread } from '../../types/core.js'
-import { CommentItem } from './CommentItem.js'
+
 import { CommentComposer } from '../input/CommentComposer.js'
+import { CommentItem } from './CommentItem.js'
 
 type ThreadItemProps = {
-  thread: Thread
   isActive: boolean
   isInteractive: boolean
-  onDeleteThread: (thread: Thread) => void
   onDeleteComment: (commentId: string, thread: Thread) => void
+  onDeleteThread: (thread: Thread) => void
   onSubmitReply: (content: string, thread: Thread) => void
+  thread: Thread
 }
 
 /**
  * Component for rendering a thread with its comments and reply composer
  */
 export const ThreadItem: React.FC<ThreadItemProps> = ({
-  thread,
   isActive,
   isInteractive,
-  onDeleteThread,
   onDeleteComment,
+  onDeleteThread,
   onSubmitReply,
+  thread,
 }) => {
   return (
     <li
@@ -37,9 +39,9 @@ export const ThreadItem: React.FC<ThreadItemProps> = ({
           <span>{thread.quote}</span>
         </blockquote>
         <button
-          onClick={() => onDeleteThread(thread)}
-          className="CommentPlugin_CommentsPanel_List_DeleteButton"
           aria-label="Delete thread"
+          className="CommentPlugin_CommentsPanel_List_DeleteButton"
+          onClick={() => onDeleteThread(thread)}
         >
           <i className="delete" />
         </button>
@@ -47,8 +49,8 @@ export const ThreadItem: React.FC<ThreadItemProps> = ({
       <ul className="CommentPlugin_CommentsPanel_List_Thread_Comments">
         {thread.comments.map((comment) => (
           <CommentItem
-            key={comment.id}
             comment={comment}
+            key={comment.id}
             onDelete={
               !comment.deleted
                 ? () => onDeleteComment(comment.id, thread)
@@ -59,8 +61,8 @@ export const ThreadItem: React.FC<ThreadItemProps> = ({
       </ul>
       <div className="CommentPlugin_CommentsPanel_List_Thread_Editor">
         <CommentComposer
-          submitAddComment={(content) => onSubmitReply(content, thread)}
           placeholder="Reply to comment..."
+          submitAddComment={(content) => onSubmitReply(content, thread)}
         />
       </div>
     </li>

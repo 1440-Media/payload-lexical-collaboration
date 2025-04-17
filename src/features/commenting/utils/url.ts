@@ -5,7 +5,7 @@
  * @returns The document ID or 'default' if not found
  */
 export function getDocumentIdFromUrl(): string {
-  if (typeof window === 'undefined') return 'default';
+  if (typeof window === 'undefined') {return 'default';}
   return window.location.pathname.split('/').pop() || 'default';
 }
 
@@ -13,8 +13,8 @@ export function getDocumentIdFromUrl(): string {
  * Extracts the collection name from the current URL path
  * @returns The collection name or null if not found
  */
-export function getCollectionFromUrl(): string | null {
-  if (typeof window === 'undefined') return null;
+export function getCollectionFromUrl(): null | string {
+  if (typeof window === 'undefined') {return null;}
   
   const pathParts = window.location.pathname.split('/');
   const collectionIndex = pathParts.findIndex(part => part === 'collections');

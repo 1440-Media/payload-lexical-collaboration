@@ -1,6 +1,7 @@
 'use client'
 
 import type { Comment, Thread } from '../types/core.js'
+
 import { createUID } from './id.js'
 
 /**
@@ -14,15 +15,15 @@ export function createComment(
   deleted?: boolean,
 ): Comment {
   return {
+    id: id === undefined ? createUID() : id,
+    type: 'comment',
     author,
     content,
     deleted: deleted === undefined ? false : deleted,
-    id: id === undefined ? createUID() : id,
     timeStamp:
       timeStamp === undefined
         ? performance.timeOrigin + performance.now()
         : timeStamp,
-    type: 'comment',
   }
 }
 
@@ -35,10 +36,10 @@ export function createThread(
   id?: string,
 ): Thread {
   return {
-    comments,
     id: id === undefined ? createUID() : id,
-    quote,
     type: 'thread',
+    comments,
+    quote,
   }
 }
 
@@ -47,10 +48,10 @@ export function createThread(
  */
 export function cloneThread(thread: Thread): Thread {
   return {
-    comments: Array.from(thread.comments),
     id: thread.id,
-    quote: thread.quote,
     type: 'thread',
+    comments: Array.from(thread.comments),
+    quote: thread.quote,
   }
 }
 
@@ -59,11 +60,11 @@ export function cloneThread(thread: Thread): Thread {
  */
 export function markDeleted(comment: Comment): Comment {
   return {
+    id: comment.id,
+    type: 'comment',
     author: comment.author,
     content: '[Deleted Comment]',
     deleted: true,
-    id: comment.id,
     timeStamp: comment.timeStamp,
-    type: 'comment',
   }
 }

@@ -2,7 +2,8 @@
  * Hook return types for the commenting feature
  */
 
-import type { NodeKey } from '@payloadcms/richtext-lexical/lexical'
+import type { NodeKey, RangeSelection } from '@payloadcms/richtext-lexical/lexical'
+
 import type { Comment, CommentDeletionResult, Thread } from './core.js'
 
 /**
@@ -10,13 +11,18 @@ import type { Comment, CommentDeletionResult, Thread } from './core.js'
  */
 export type CommentOperationsResult = {
   /**
+   * Delete all comments for the current document
+   */
+  deleteAllComments: () => Promise<boolean>
+  
+  /**
    * Delete a comment or thread
    */
   deleteCommentOrThread: (
     comment: Comment | Thread, 
     thread?: Thread
   ) => Promise<CommentDeletionResult | null>
-  
+
   /**
    * Submit a new comment
    */
@@ -24,13 +30,8 @@ export type CommentOperationsResult = {
     commentOrThread: Comment | Thread,
     isInlineComment: boolean,
     thread?: Thread,
-    selection?: any,
+    selection?: null | RangeSelection,
   ) => Promise<void>
-
-  /**
-   * Delete all comments for the current document
-   */
-  deleteAllComments: () => Promise<boolean>
 }
 
 /**
@@ -38,24 +39,24 @@ export type CommentOperationsResult = {
  */
 export type DocumentOperationsResult = {
   /**
-   * Whether the document is saved
-   */
-  isDocumentSaved: boolean
-  
-  /**
-   * Set whether the document is saved
-   */
-  setIsDocumentSaved: (saved: boolean) => void
-  
-  /**
    * Check if the document exists
    */
   checkIfDocumentExists: () => Promise<boolean>
   
   /**
+   * Whether the document is saved
+   */
+  isDocumentSaved: boolean
+  
+  /**
    * Save the document
    */
   saveDocument: () => Promise<boolean>
+  
+  /**
+   * Set whether the document is saved
+   */
+  setIsDocumentSaved: (saved: boolean) => void
 }
 
 /**
@@ -83,9 +84,9 @@ export type CommentCommandsResult = {
  */
 export type CommentMarksResult = {
   /**
-   * Map of mark node keys to IDs
+   * Active anchor key
    */
-  markNodeMap: Map<string, Set<NodeKey>>
+  activeAnchorKey: NodeKey | null
   
   /**
    * Active comment IDs
@@ -93,7 +94,7 @@ export type CommentMarksResult = {
   activeIDs: string[]
   
   /**
-   * Active anchor key
+   * Map of mark node keys to IDs
    */
-  activeAnchorKey: NodeKey | null
+  markNodeMap: Map<string, Set<NodeKey>>
 }

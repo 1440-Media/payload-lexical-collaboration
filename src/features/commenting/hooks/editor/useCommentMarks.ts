@@ -1,21 +1,23 @@
 'use client'
 
-import { useEffect, useMemo } from 'react'
 import type { LexicalEditor, NodeKey } from '@payloadcms/richtext-lexical/lexical'
-import type { MarkNodeMapType } from '../../types/core.js'
-import { mergeRegister, registerNestedElementResolver } from '@payloadcms/richtext-lexical/lexical/utils'
-import {
-  $createMarkNode,
-  $getMarkIDs,
-  $isMarkNode,
-  MarkNode,
-} from '@payloadcms/richtext-lexical/lexical/mark'
+
 import {
   $getNodeByKey,
   $getSelection,
   $isRangeSelection,
   $isTextNode,
 } from '@payloadcms/richtext-lexical/lexical'
+import {
+  $createMarkNode,
+  $getMarkIDs,
+  $isMarkNode,
+  MarkNode,
+} from '@payloadcms/richtext-lexical/lexical/mark'
+import { mergeRegister, registerNestedElementResolver } from '@payloadcms/richtext-lexical/lexical/utils'
+import { useEffect, useMemo } from 'react'
+
+import type { MarkNodeMapType } from '../../types/core.js'
 
 /**
  * Hook for handling comment marks in the editor
@@ -60,7 +62,7 @@ export function useCommentMarks(
         (mutations) => {
           editor.getEditorState().read(() => {
             for (const [key, mutation] of mutations) {
-              const node: null | MarkNode = $getNodeByKey(key)
+              const node: MarkNode | null = $getNodeByKey(key)
               let ids: NodeKey[] = []
 
               if (mutation === 'destroyed') {

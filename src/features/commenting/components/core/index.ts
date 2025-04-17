@@ -1,2 +1,2 @@
-export * from './CommentPlugin.js';
 export * from './CommentPanel.js';
+export * from './CommentPlugin.js';

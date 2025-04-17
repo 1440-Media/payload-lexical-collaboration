@@ -1,14 +1,17 @@
 'use client'
 
-import { useCallback, useEffect } from 'react'
 import type { LexicalEditor, NodeKey } from '@payloadcms/richtext-lexical/lexical'
-import type { CommentCommandsResult } from '../../types/hooks.js'
+
 import {
   $getSelection,
   COMMAND_PRIORITY_CRITICAL,
   COMMAND_PRIORITY_LOW,
   KEY_ESCAPE_COMMAND,
 } from '@payloadcms/richtext-lexical/lexical'
+import { useCallback, useEffect } from 'react'
+
+import type { CommentCommandsResult } from '../../types/hooks.js'
+
 import { INSERT_COMMENT_COMMAND, TOGGLE_COMMENTS_COMMAND } from '../../command.js'
 
 /**

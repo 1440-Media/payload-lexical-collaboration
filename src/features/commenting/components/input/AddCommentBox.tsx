@@ -2,8 +2,7 @@
 
 import type { LexicalEditor, NodeKey } from '@payloadcms/richtext-lexical/lexical'
 
-import React, { useCallback, useEffect, useRef } from 'react'
-import { useLayoutEffect } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect , useRef } from 'react'
 
 type AddCommentBoxProps = {
   anchorKey: NodeKey
@@ -46,9 +45,9 @@ export const AddCommentBox: React.FC<AddCommentBoxProps> = ({
   return (
     <div className="CommentPlugin_AddCommentBox" ref={boxRef}>
       <button
+        aria-label="Add comment"
         className="CommentPlugin_AddCommentBox_button"
         onClick={onAddComment}
-        aria-label="Add comment"
       >
         <i className="icon add-comment" />
       </button>

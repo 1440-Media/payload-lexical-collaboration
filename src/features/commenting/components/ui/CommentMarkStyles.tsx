@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+
 import './CommentMarks.css'
 import './DisabledCommentMarks.css'
 
@@ -49,7 +50,7 @@ export const CommentMarkStyles: React.FC<{ enabled: boolean }> = ({ enabled }) =
 
   // Create a style element with direct CSS overrides
   React.useEffect(() => {
-    if (typeof document === 'undefined') return;
+    if (typeof document === 'undefined') {return;}
 
     // Create a style element
     const styleElement = document.createElement('style');

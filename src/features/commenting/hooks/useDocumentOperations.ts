@@ -1,8 +1,11 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
 import type { LexicalEditor } from '@payloadcms/richtext-lexical/lexical'
+
+import { useCallback, useEffect, useState } from 'react'
+
 import type { DocumentOperationsResult } from '../types/hooks.js'
+
 import { documentService } from '../services/documentService.js'
 
 /**
@@ -39,9 +42,9 @@ export function useDocumentOperations(
   }, [checkIfDocumentExists])
 
   return {
-    isDocumentSaved,
-    setIsDocumentSaved,
     checkIfDocumentExists,
+    isDocumentSaved,
     saveDocument,
+    setIsDocumentSaved,
   }
 }

@@ -28,7 +28,7 @@ export async function withErrorHandling<T>(
  */
 export async function withCustomErrorHandling<T>(
   operation: () => Promise<T>,
-  errorHandler: (error: any) => Promise<T> | T
+  errorHandler: (error: unknown) => Promise<T> | T
 ): Promise<T> {
   try {
     return await operation()
@@ -42,6 +42,6 @@ export async function withCustomErrorHandling<T>(
  * @param context The context of the error
  * @param error The error object
  */
-export function logError(context: string, error: any): void {
+export function logError(context: string, error: unknown): void {
   console.error(`Error in ${context}:`, error)
 }

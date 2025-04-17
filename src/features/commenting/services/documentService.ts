@@ -1,14 +1,30 @@
 'use client'
 
 import type { LexicalEditor } from '@payloadcms/richtext-lexical/lexical'
+
 import type { IDocumentService } from '../types/services.js'
-import { getCollectionFromUrl, getDocumentApiEndpoint, getDocumentIdFromUrl } from '../utils/url.js'
+
 import { APIUtils } from '../utils/api.js'
 import { withErrorHandling } from '../utils/errorHandling.js'
+import { getCollectionFromUrl, getDocumentApiEndpoint, getDocumentIdFromUrl } from '../utils/url.js'
 
 /**
  * Service for handling document-related operations
  */
+
+/**
+ * Type for rich text field value
+ */
+type RichTextField = {
+  root?: unknown
+  type?: string
+  version?: unknown
+}
+
+/**
+ * Type for document data returned from the API
+ */
+type DocumentData = Record<string, unknown>
 export class DocumentService implements IDocumentService {
   /**
    * Check if a document exists in the database
@@ -48,17 +64,19 @@ export class DocumentService implements IDocumentService {
         let fieldName = 'content' // Default field name
         
         const endpoint = getDocumentApiEndpoint(collection, docId)
-        const docData = await APIUtils.get<Record<string, any>>(endpoint)
+        const docData = await APIUtils.get<DocumentData>(endpoint)
         
         // Look for fields that might be rich text fields
         const possibleFieldNames = Object.keys(docData).filter(key => {
           // Check if the field value is an object and has properties that suggest it's a rich text field
           const value = docData[key]
-          return (
-            typeof value === 'object' && 
-            value !== null && 
-            (value.root || value.type === 'root' || value.version)
-          )
+          if (typeof value !== 'object' || value === null) {
+            return false
+          }
+          
+          // Type assertion to check for rich text field properties
+          const richTextField = value as RichTextField
+          return !!(richTextField.root || richTextField.type === 'root' || richTextField.version)
         })
         
         if (possibleFieldNames.length > 0) {

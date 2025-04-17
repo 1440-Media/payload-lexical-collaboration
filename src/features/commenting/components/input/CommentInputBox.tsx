@@ -1,22 +1,23 @@
 'use client'
 
 import type { RangeSelection } from '@payloadcms/richtext-lexical/lexical'
+
+import { $getSelection, $isRangeSelection } from '@payloadcms/richtext-lexical/lexical'
+import { createDOMRange, createRectsFromDOMRange } from '@payloadcms/richtext-lexical/lexical/selection'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
+
 import type { CommentInputBoxProps } from '../../types/props.js'
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
-import { createDOMRange, createRectsFromDOMRange } from '@payloadcms/richtext-lexical/lexical/selection'
-import { $getSelection, $isRangeSelection } from '@payloadcms/richtext-lexical/lexical'
 import { createComment, createThread } from '../../utils/factory.js'
-import { useLayoutEffect } from 'react'
 
 export const CommentInputBox: React.FC<CommentInputBoxProps> = ({
-  editor,
-  cancelAddComment,
-  submitAddComment,
   author,
+  cancelAddComment,
+  editor,
   setActiveAnchorKey,
   setShowCommentInput,
+  submitAddComment,
 }) => {
   const [content, setContent] = useState('')
   const [canSubmit, setCanSubmit] = useState(false)
@@ -29,7 +30,7 @@ export const CommentInputBox: React.FC<CommentInputBoxProps> = ({
     }),
     [],
   )
-  const selectionRef = useRef<RangeSelection | null>(null)
+  const selectionRef = useRef<null | RangeSelection>(null)
 
   const updateLocation = useCallback(() => {
     editor.getEditorState().read(() => {
@@ -189,25 +190,28 @@ export const CommentInputBox: React.FC<CommentInputBoxProps> = ({
     <div className="CommentPlugin_CommentInputBox" ref={boxRef}>
       <div className="CommentPlugin_CommentInputBox_EditorContainer">
         <textarea
-          ref={textareaRef}
+          aria-label="Comment text"
           className="CommentPlugin_CommentInputBox_Editor"
-          placeholder="Type a comment..."
-          value={content}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
+          placeholder="Type a comment..."
+          ref={textareaRef}
+          value={content}
         />
       </div>
       <div className="CommentPlugin_CommentInputBox_Buttons">
         <button
-          onClick={cancelAddComment}
           className="CommentPlugin_CommentInputBox_Button"
+          onClick={cancelAddComment}
+          type="button"
         >
           Cancel
         </button>
         <button
-          onClick={submitComment}
-          disabled={!canSubmit}
           className="CommentPlugin_CommentInputBox_Button primary"
+          disabled={!canSubmit}
+          onClick={submitComment}
+          type="button"
         >
           Comment
         </button>

@@ -9,11 +9,6 @@ import type { Comment, CommentDeletionResult, Comments, Thread } from './core.js
  */
 export interface CommentStoreInterface {
   /**
-   * Get all comments and threads
-   */
-  getComments(): Comments
-  
-  /**
    * Add a comment or thread to the store
    */
   addComment(
@@ -21,6 +16,11 @@ export interface CommentStoreInterface {
     thread?: Thread,
     offset?: number,
   ): void
+  
+  /**
+   * Delete all comments and threads from the store
+   */
+  deleteAllComments(): void
   
   /**
    * Delete a comment or thread from the store
@@ -31,19 +31,19 @@ export interface CommentStoreInterface {
   ): CommentDeletionResult | null
   
   /**
-   * Delete all comments and threads from the store
+   * Get all comments and threads
    */
-  deleteAllComments(): void
-  
-  /**
-   * Register a callback to be called when the store changes
-   */
-  registerOnChange(onChange: () => void): () => void
+  getComments(): Comments
   
   /**
    * Load comments for a document from the Payload API
    */
   loadComments(documentId: string): Promise<void>
+  
+  /**
+   * Register a callback to be called when the store changes
+   */
+  registerOnChange(onChange: () => void): () => void
   
   /**
    * Save a comment or thread to the Payload API

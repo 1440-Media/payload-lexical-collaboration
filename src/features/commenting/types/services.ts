@@ -2,24 +2,30 @@
  * Service interface types for the commenting feature
  */
 
-import type { LexicalEditor } from '@payloadcms/richtext-lexical/lexical'
-import type { Comment, CommentDeletionResult, Comments, MarkNodeMapType, Thread } from './core.js'
+import type { LexicalEditor, RangeSelection } from '@payloadcms/richtext-lexical/lexical'
+
 import type { CommentStore } from '../store.js'
+import type { Comment, CommentDeletionResult, Comments, MarkNodeMapType, Thread } from './core.js'
 
 /**
  * Interface for the CommentService
  */
 export interface ICommentService {
   /**
+   * Delete all comments for a document
+   */
+  deleteAllComments(documentId: string): Promise<boolean>
+  
+  /**
    * Find a user by email
    */
-  findUserByEmail(email: string): Promise<string | null>
+  findUserByEmail(email: string): Promise<null | string>
   
   /**
    * Load comments for a document
    */
   loadComments(documentId: string): Promise<Comments>
-  
+
   /**
    * Save a comment or thread
    */
@@ -28,11 +34,6 @@ export interface ICommentService {
     thread?: Thread, 
     documentId?: string
   ): Promise<boolean>
-
-  /**
-   * Delete all comments for a document
-   */
-  deleteAllComments(documentId: string): Promise<boolean>
 }
 
 /**
@@ -60,6 +61,16 @@ export interface IDocumentService {
  */
 export interface ICommentOperations {
   /**
+   * Delete all comments for the current document
+   */
+  deleteAllComments(
+    commentStore: CommentStore,
+    editor: LexicalEditor,
+    markNodeMap: MarkNodeMapType,
+    saveDocumentCallback?: () => Promise<boolean | void>
+  ): Promise<boolean>
+  
+  /**
    * Delete a comment or thread
    */
   deleteCommentOrThread(
@@ -68,9 +79,9 @@ export interface ICommentOperations {
     markNodeMap: MarkNodeMapType,
     comment: Comment | Thread,
     thread?: Thread,
-    saveDocumentCallback?: () => Promise<void | boolean>
+    saveDocumentCallback?: () => Promise<boolean | void>
   ): Promise<CommentDeletionResult | null>
-  
+
   /**
    * Submit a new comment
    */
@@ -80,17 +91,7 @@ export interface ICommentOperations {
     commentOrThread: Comment | Thread,
     isInlineComment: boolean,
     thread?: Thread,
-    selection?: any,
-    saveDocumentCallback?: () => Promise<void | boolean>
+    selection?: null | RangeSelection,
+    saveDocumentCallback?: () => Promise<boolean | void>
   ): Promise<void>
-
-  /**
-   * Delete all comments for the current document
-   */
-  deleteAllComments(
-    commentStore: CommentStore,
-    editor: LexicalEditor,
-    markNodeMap: MarkNodeMapType,
-    saveDocumentCallback?: () => Promise<void | boolean>
-  ): Promise<boolean>
 }
