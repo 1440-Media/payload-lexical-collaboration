@@ -28,6 +28,11 @@ export interface ICommentService {
     thread?: Thread, 
     documentId?: string
   ): Promise<boolean>
+
+  /**
+   * Delete all comments for a document
+   */
+  deleteAllComments(documentId: string): Promise<boolean>
 }
 
 /**
@@ -78,4 +83,14 @@ export interface ICommentOperations {
     selection?: any,
     saveDocumentCallback?: () => Promise<void | boolean>
   ): Promise<void>
+
+  /**
+   * Delete all comments for the current document
+   */
+  deleteAllComments(
+    commentStore: CommentStore,
+    editor: LexicalEditor,
+    markNodeMap: MarkNodeMapType,
+    saveDocumentCallback?: () => Promise<void | boolean>
+  ): Promise<boolean>
 }

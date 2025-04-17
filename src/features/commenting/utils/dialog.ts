@@ -3,17 +3,25 @@
  */
 
 /**
- * Show a confirmation dialog for deleting a comment
- * @returns True if the user confirms, false otherwise
+ * Confirm deletion of a comment
+ * @returns True if confirmed, false otherwise
  */
-export const confirmDeleteComment = (): boolean => {
+export function confirmDeleteComment(): boolean {
   return window.confirm('Are you sure you want to delete this comment?')
 }
 
 /**
- * Show a confirmation dialog for deleting a thread
- * @returns True if the user confirms, false otherwise
+ * Confirm deletion of a thread
+ * @returns True if confirmed, false otherwise
  */
-export const confirmDeleteThread = (): boolean => {
-  return window.confirm('Are you sure you want to delete this thread?')
+export function confirmDeleteThread(): boolean {
+  return window.confirm('Are you sure you want to delete this thread and all its comments?')
+}
+
+/**
+ * Confirm deletion of all comments
+ * @returns True if confirmed, false otherwise
+ */
+export function confirmDeleteAllComments(): boolean {
+  return window.confirm('Are you sure you want to delete ALL comments? This action cannot be undone.')
 }

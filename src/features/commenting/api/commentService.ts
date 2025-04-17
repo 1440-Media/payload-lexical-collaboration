@@ -210,6 +210,38 @@ export class CommentService implements ICommentService {
       false
     )
   }
+
+  /**
+   * Deletes all comments for a document
+   * @param documentId Document ID to delete comments for
+   * @returns True if successful, false otherwise
+   */
+  async deleteAllComments(documentId: string): Promise<boolean> {
+    return withErrorHandling(
+      async () => {
+        // Fetch all comments for this document
+        const params = {
+          'where[documentId][equals]': documentId,
+          'limit': '100'
+        }
+        
+        const data = await APIUtils.getPaginated<CommentAPIEntity>(API_ENDPOINTS.COMMENTS, params)
+        
+        // Mark all comments as resolved (deleted)
+        const updatePromises = data.docs.map(async (comment: CommentAPIEntity) => {
+          return APIUtils.patch(`${API_ENDPOINTS.COMMENTS}/${comment.id}`, {
+            resolved: true,
+          })
+        })
+        
+        // Wait for all updates to complete
+        await Promise.all(updatePromises)
+        return true
+      },
+      'Error deleting all comments',
+      false
+    )
+  }
 }
 
 // Export a singleton instance

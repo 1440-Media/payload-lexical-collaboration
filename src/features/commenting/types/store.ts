@@ -31,6 +31,11 @@ export interface CommentStoreInterface {
   ): CommentDeletionResult | null
   
   /**
+   * Delete all comments and threads from the store
+   */
+  deleteAllComments(): void
+  
+  /**
    * Register a callback to be called when the store changes
    */
   registerOnChange(onChange: () => void): () => void

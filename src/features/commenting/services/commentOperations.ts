@@ -8,6 +8,8 @@ import type { CommentAPIEntity } from '../types/api.js'
 import { API_ENDPOINTS } from '../types/api.js'
 import { APIUtils } from '../utils/api.js'
 import { withErrorHandling } from '../utils/errorHandling.js'
+import { getDocumentIdFromUrl } from '../utils/url.js'
+import { commentService } from '../api/commentService.js'
 import {
   $isMarkNode,
   $unwrapMarkNode,
@@ -158,6 +160,61 @@ export class CommentOperations implements ICommentOperations {
       },
       'Error submitting comment',
       undefined
+    )
+  }
+
+  /**
+   * Delete all comments for the current document
+   * @param commentStore The comment store instance
+   * @param editor The Lexical editor instance
+   * @param markNodeMap Map of mark node keys to IDs
+   * @param saveDocumentCallback Optional callback to save the document after deletion
+   */
+  async deleteAllComments(
+    commentStore: CommentStore,
+    editor: LexicalEditor,
+    markNodeMap: MarkNodeMapType,
+    saveDocumentCallback?: () => Promise<void | boolean>
+  ): Promise<boolean> {
+    return withErrorHandling(
+      async () => {
+        // Get the document ID from the URL
+        const documentId = getDocumentIdFromUrl()
+        
+        // Delete all comments from the database
+        const success = await commentService.deleteAllComments(documentId)
+        
+        if (success) {
+          // Clear comments from the store
+          commentStore.deleteAllComments()
+          
+          // Remove all comment marks from the editor
+          editor.update(() => {
+            // Collect all mark node keys
+            const allMarkNodeKeys = new Set<string>()
+            markNodeMap.forEach((keys) => {
+              keys.forEach((key) => allMarkNodeKeys.add(key))
+            })
+            
+            // Unwrap all mark nodes
+            allMarkNodeKeys.forEach((key) => {
+              const node = $getNodeByKey(key)
+              if ($isMarkNode(node)) {
+                $unwrapMarkNode(node)
+              }
+            })
+          })
+          
+          // Save the document after removing all comment marks
+          if (saveDocumentCallback) {
+            await saveDocumentCallback()
+          }
+        }
+        
+        return success
+      },
+      'Error deleting all comments',
+      false
     )
   }
 }

@@ -44,7 +44,7 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
   // Custom hooks
   const markNodeMap = useCommentMarks(editor, setActiveIDs, setActiveAnchorKey)
   const { isDocumentSaved, saveDocument } = useDocumentOperations(editor, documentId)
-  const { deleteCommentOrThread, submitAddComment } = useCommentOperations(
+  const { deleteCommentOrThread, submitAddComment, deleteAllComments } = useCommentOperations(
     commentStore, 
     editor, 
     markNodeMap, 
@@ -134,6 +134,7 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
             comments={comments}
             submitAddComment={submitAddComment}
             deleteCommentOrThread={deleteCommentOrThread}
+            deleteAllComments={deleteAllComments}
             activeIDs={activeIDs}
             markNodeMap={markNodeMap}
             currentUser={currentUser}

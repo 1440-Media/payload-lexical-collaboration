@@ -84,6 +84,11 @@ export type CommentsPanelProps = {
   ) => void
   
   /**
+   * Function to delete all comments
+   */
+  deleteAllComments?: () => Promise<boolean>
+  
+  /**
    * Map of mark node keys to IDs
    */
   markNodeMap: MarkNodeMapType

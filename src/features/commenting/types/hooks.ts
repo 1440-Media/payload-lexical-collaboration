@@ -26,6 +26,11 @@ export type CommentOperationsResult = {
     thread?: Thread,
     selection?: any,
   ) => Promise<void>
+
+  /**
+   * Delete all comments for the current document
+   */
+  deleteAllComments: () => Promise<boolean>
 }
 
 /**

@@ -3,9 +3,9 @@
 import type { Comment, Thread } from '../../types/core.js'
 import type { CommentsPanelProps } from '../../types/props.js'
 
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { createComment } from '../../utils/factory.js'
-import { confirmDeleteComment, confirmDeleteThread } from '../../utils/dialog.js'
+import { confirmDeleteComment, confirmDeleteThread, confirmDeleteAllComments } from '../../utils/dialog.js'
 import { CommentItem } from '../display/CommentItem.js'
 import { ThreadItem } from '../display/ThreadItem.js'
 
@@ -16,11 +16,13 @@ export const CommentsPanel: React.FC<CommentsPanelProps> = ({
   activeIDs,
   comments,
   deleteCommentOrThread,
+  deleteAllComments,
   markNodeMap,
   submitAddComment,
   currentUser,
 }) => {
   const listRef = useRef<HTMLUListElement>(null)
+  const [showDeleteDropdown, setShowDeleteDropdown] = useState(false)
   const isEmpty = comments.length === 0
 
   const handleDeleteComment = (commentId: string, thread?: Thread) => {
@@ -48,9 +50,59 @@ export const CommentsPanel: React.FC<CommentsPanelProps> = ({
     }
   }
 
+  const toggleDeleteDropdown = () => {
+    setShowDeleteDropdown(!showDeleteDropdown)
+  }
+
+  const handleDeleteAllComments = () => {
+    if (deleteAllComments && confirmDeleteAllComments()) {
+      deleteAllComments()
+      setShowDeleteDropdown(false)
+    }
+  }
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement
+      if (!target.closest('.CommentPlugin_CommentsPanel_DeleteContainer')) {
+        setShowDeleteDropdown(false)
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside)
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [])
+
   return (
     <div className="CommentPlugin_CommentsPanel">
-      <h2 className="CommentPlugin_CommentsPanel_Heading">Comments</h2>
+      <div className="CommentPlugin_CommentsPanel_Header">
+        <h2 className="CommentPlugin_CommentsPanel_Heading">Comments</h2>
+        {!isEmpty && deleteAllComments && (
+          <div className="CommentPlugin_CommentsPanel_DeleteContainer">
+            <button
+              onClick={toggleDeleteDropdown}
+              className="CommentPlugin_CommentsPanel_DeleteIcon"
+              aria-label="Delete options"
+            >
+              <i className="delete" />
+            </button>
+            {showDeleteDropdown && (
+              <div className="CommentPlugin_CommentsPanel_DeleteDropdown">
+                <button
+                  onClick={handleDeleteAllComments}
+                  className="CommentPlugin_CommentsPanel_DeleteAllButton"
+                  aria-label="Delete all comments"
+                >
+                  Delete All
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
       {isEmpty ? (
         <div className="CommentPlugin_CommentsPanel_Empty">No Comments</div>
       ) : (

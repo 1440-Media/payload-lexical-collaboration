@@ -129,6 +129,14 @@ export class CommentStore implements CommentStoreInterface {
   }
 
   /**
+   * Delete all comments and threads from the store
+   */
+  deleteAllComments(): void {
+    this._comments = []
+    triggerOnChange(this)
+  }
+
+  /**
    * Register a callback to be called when the store changes
    */
   registerOnChange(onChange: () => void): () => void {

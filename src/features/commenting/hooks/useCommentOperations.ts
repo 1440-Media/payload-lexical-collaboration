@@ -57,8 +57,22 @@ export function useCommentOperations(
     [commentStore, editor, saveDocument]
   )
 
+  // Delete all comments
+  const deleteAllComments = useCallback(
+    () => {
+      return commentOperations.deleteAllComments(
+        commentStore,
+        editor,
+        markNodeMap,
+        saveDocument
+      )
+    },
+    [commentStore, editor, markNodeMap, saveDocument]
+  )
+
   return {
     deleteCommentOrThread,
     submitAddComment,
+    deleteAllComments,
   }
 }

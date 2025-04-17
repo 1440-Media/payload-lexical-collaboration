@@ -26,16 +26,77 @@
   }
 }
 
-.CommentPlugin_CommentsPanel_Heading {
-  padding: 15px 15px 12px;
-  margin: 0;
+.CommentPlugin_CommentsPanel_Header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px;
   border-bottom: 1px solid var(--theme-elevation-200, #e0e0e0);
+}
+
+.CommentPlugin_CommentsPanel_Heading {
+  padding: 15px 0 12px;
+  margin: 0;
   font-size: 18px;
   font-weight: 500;
-  display: block;
-  width: 100%;
   color: var(--theme-elevation-800, #333333);
   overflow: hidden;
+}
+
+.CommentPlugin_CommentsPanel_DeleteContainer {
+  position: relative;
+}
+
+.CommentPlugin_CommentsPanel_DeleteIcon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.CommentPlugin_CommentsPanel_DeleteIcon:hover {
+  background-color: var(--theme-elevation-200, #e0e0e0);
+}
+
+i.delete {
+  background-size: contain;
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23666666' viewBox='0 0 16 16'%3E%3Cpath d='M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z'/%3E%3Cpath fill-rule='evenodd' d='M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z'/%3E%3C/svg%3E");
+}
+
+.CommentPlugin_CommentsPanel_DeleteDropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: white;
+  border: 1px solid var(--theme-elevation-200, #e0e0e0);
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  min-width: 120px;
+  margin-top: 5px;
+}
+
+.CommentPlugin_CommentsPanel_DeleteAllButton {
+  background-color: transparent;
+  color: var(--theme-error-500, #e53935);
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background-color 0.2s ease;
+}
+
+.CommentPlugin_CommentsPanel_DeleteAllButton:hover {
+  background-color: var(--theme-elevation-100, #f5f5f5);
 }
 
 .CommentPlugin_CommentsPanel_Editor {
@@ -122,7 +183,7 @@ i.send {
   margin: 0;
   width: 100%;
   position: absolute;
-  top: 52px; /* Adjusted to match the new header height */
+  top: 60px; /* Adjusted to match the new header height */
   overflow-y: auto;
   height: calc(100% - 52px);
 }
