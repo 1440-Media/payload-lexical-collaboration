@@ -69,8 +69,10 @@ export default buildConfig({
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [
       ...defaultFeatures,
-      CommentFeature(),
       FixedToolbarFeature(),
+      // To use the CommentFeature directly (instead of via the plugin):
+      // CommentFeature(), // Fully enabled
+      CommentFeature({ enabled: true }), // Disabled but still registers MarkNode
     ],
   }),
   email: testEmailAdapter,
@@ -82,6 +84,10 @@ export default buildConfig({
       collections: {
         posts: true,
       },
+      // To disable the plugin while preserving comment marks in documents,
+      // use the disabled option instead of commenting out the plugin.
+      // This prevents "parseEditorState: type 'mark' not found" errors.
+      // disabled: true,
     }),
   ],
   secret: process.env.PAYLOAD_SECRET || 'test-secret_key',

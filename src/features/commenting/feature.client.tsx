@@ -6,7 +6,7 @@ import { MarkNode } from '@payloadcms/richtext-lexical/lexical/mark'
 
 import { CommentPlugin } from './components/core/CommentPlugin.js'
 import { INSERT_COMMENT_COMMAND, TOGGLE_COMMENTS_COMMAND } from './command.js'
-import { CommentIcon } from './components/ui/CommentIcon.js'
+import { CommentIcon, CommentMarkStyles } from './components/ui/index.js'
 import { getDocumentIdFromUrl } from './utils/url.js'
 import { CommentClientFeatureProps } from './types/props.js'
 
@@ -16,7 +16,14 @@ export const CommentClientFeature = createClientFeature<CommentClientFeatureProp
 
     if (!enabled) {
       return {
-        plugins: [],
+        // Always register MarkNode even when disabled to prevent errors with existing marks
+        nodes: [MarkNode],
+        plugins: [
+          {
+            Component: () => <CommentMarkStyles enabled={false} />,
+            position: 'normal',
+          },
+        ],
         toolbarFixed: {
           groups: [],
         },
@@ -42,10 +49,13 @@ export const CommentClientFeature = createClientFeature<CommentClientFeatureProp
             const currentUser = user?.email || 'Anonymous'
 
             return (
-              <CommentPlugin 
-                documentId={documentId} 
-                currentUser={currentUser} 
-              />
+              <>
+                <CommentMarkStyles enabled={true} />
+                <CommentPlugin 
+                  documentId={documentId} 
+                  currentUser={currentUser} 
+                />
+              </>
             )
           },
           position: 'normal',

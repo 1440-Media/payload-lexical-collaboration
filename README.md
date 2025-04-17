@@ -127,8 +127,43 @@ The `payloadLexicalCollaboration` function accepts the following options:
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `disabled` | `boolean` | `false` | Disable the plugin entirely |
+| `disabled` | `boolean` | `false` | Disable the plugin entirely while preserving database schema |
 | `collections` | `Partial<Record<CollectionSlug, true>>` | `{}` | Specify collections to add custom fields to |
+
+### Disabling the Plugin
+
+When you need to disable the plugin, there are two recommended approaches:
+
+#### Option 1: Use the `disabled` property (Recommended)
+
+```typescript
+payloadLexicalCollaboration({
+  collections: {
+    posts: true,
+  },
+  disabled: true, // This preserves comment marks in documents
+})
+```
+
+This approach is recommended because it:
+- Preserves the database schema for migrations
+- Keeps the `MarkNode` registered to prevent "parseEditorState: type 'mark' not found" errors
+- Hides all comment highlights in the editor (they become transparent)
+- Disables all plugin functionality
+
+#### Option 2: Use the CommentFeature with `enabled: false`
+
+```typescript
+CommentFeature({ enabled: false })
+```
+
+This approach:
+- Registers the `MarkNode` to prevent errors
+- Hides all comment highlights in the editor (they become transparent)
+- Disables all commenting UI and functionality
+- Is useful when you want to disable commenting for specific fields
+
+> **Important**: Avoid completely commenting out the plugin in your config if you have documents with comment marks. This will cause "parseEditorState: type 'mark' not found" errors when loading those documents.
 
 ### Feature Options
 

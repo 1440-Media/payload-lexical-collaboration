@@ -76,7 +76,19 @@ export const payloadLexicalCollaboration =
 
     /**
      * If the plugin is disabled, we still want to keep added collections/fields so the database schema is consistent which is important for migrations.
-     * If your plugin heavily modifies the database schema, you may want to remove this property.
+     * 
+     * NOTE: To properly disable this plugin while preserving existing comment marks in documents,
+     * it's recommended to use the `disabled: true` option here rather than commenting out the plugin entirely.
+     * This ensures the MarkNode is still registered to prevent "parseEditorState: type 'mark' not found" errors.
+     * 
+     * Alternatively, you can keep the CommentFeature in your editor features with `enabled: false`:
+     * 
+     * editor: lexicalEditor({
+     *   features: ({ defaultFeatures }) => [
+     *     ...defaultFeatures,
+     *     CommentFeature({ enabled: false }),
+     *   ],
+     * }),
      */
     if (pluginOptions.disabled) {
       return config

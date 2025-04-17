@@ -20,5 +20,4 @@
 /* Import Comment List and Thread styles */
 @import '../../components/display/CommentList.css';
 
-/* Import Mark Node styles */
-@import './CommentMarks.css';
+/* Mark Node styles are now imported conditionally via CommentMarkStyles component */
