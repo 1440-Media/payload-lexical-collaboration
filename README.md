@@ -173,6 +173,42 @@ The `CommentFeature` function accepts the following options:
 |--------|------|---------|-------------|
 | `enabled` | `boolean` | `true` | Enable or disable the commenting feature for a specific field |
 
+## Uninstallation
+
+Before completely removing the plugin from your project, it's important to follow these steps to ensure your content remains accessible:
+
+### Important Warning
+
+**Leaving comment highlights in your documents will create node types that cannot be read without the plugin installed.** This can cause errors when loading documents after the plugin is removed.
+
+### Safe Uninstallation Process
+
+1. **Delete all comments**: Before uninstalling, ensure all comments and their highlights are removed from your documents.
+   - Open each document with comments and use the "Delete All" function available within each post's comment tray
+   - Make sure to save each document after deleting the comments
+
+2. **Temporarily disable the plugin**: Use one of the disabling options mentioned above before completely removing it:
+   ```typescript
+   payloadLexicalCollaboration({
+     disabled: true
+   })
+   ```
+
+3. **Verify content integrity**: Open your documents to ensure they load correctly with the plugin disabled
+
+4. **Remove the plugin**: Once you've confirmed all documents load correctly, you can safely:
+   - Remove the plugin from your Payload configuration
+   - Uninstall the package with your package manager:
+     ```bash
+     npm uninstall payload-lexical-collaboration
+     # or
+     yarn remove payload-lexical-collaboration
+     # or
+     pnpm remove payload-lexical-collaboration
+     ```
+
+> **Note**: If you've already uninstalled the plugin and are experiencing "parseEditorState: type 'mark' not found" errors, you'll need to reinstall the plugin, delete all comments, and then follow the safe uninstallation process.
+
 ## Requirements
 
 - Payload CMS v3.17.1 or higher
