@@ -6,9 +6,8 @@ import { useAuth } from '@payloadcms/ui'
 
 import type { CommentClientFeatureProps } from './types/props.js'
 
-import { INSERT_COMMENT_COMMAND, TOGGLE_COMMENTS_COMMAND } from './command.js'
 import { CommentPlugin } from './components/core/CommentPlugin.js'
-import { CommentIcon, CommentMarkStyles } from './components/ui/index.js'
+import { CommentMarkStyles } from './components/ui/index.js'
 import { getDocumentIdFromUrl } from './utils/url.js'
 
 export const CommentClientFeature = createClientFeature<CommentClientFeatureProps>(
