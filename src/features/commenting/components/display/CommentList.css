@@ -142,6 +142,70 @@
     brightness(100%) contrast(92%);
 }
 
+/* Resolved thread styles */
+.CommentPlugin_CommentsPanel_List_Thread.resolved {
+  opacity: 0.6;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread.resolved .CommentPlugin_CommentsPanel_List_Thread_Quote span {
+  background-color: rgba(200, 200, 200, 0.4);
+  text-decoration: line-through;
+}
+
+/* Resolve button styles */
+.CommentPlugin_CommentsPanel_List_ResolveButton {
+  position: absolute;
+  top: 10px;
+  right: 40px;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border: none;
+  opacity: 0;
+  cursor: pointer;
+  padding: 0;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread.resolved .CommentPlugin_CommentsPanel_List_ResolveButton {
+  right: 10px;
+}
+
+.CommentPlugin_CommentsPanel_List_Thread_QuoteBox:hover
+  .CommentPlugin_CommentsPanel_List_ResolveButton {
+  opacity: 0.5;
+}
+
+.CommentPlugin_CommentsPanel_List_ResolveButton:hover {
+  background-color: transparent;
+  opacity: 1;
+  filter: invert(45%) sepia(98%) saturate(2299%) hue-rotate(100deg)
+    brightness(100%) contrast(92%);
+}
+
+i.resolve {
+  background-size: contain;
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  height: 15px;
+  width: 15px;
+  vertical-align: -10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23999999' viewBox='0 0 16 16'%3E%3Cpath d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/%3E%3C/svg%3E");
+  transition: opacity 0.2s linear;
+}
+
+i.unresolve {
+  background-size: contain;
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  height: 15px;
+  width: 15px;
+  vertical-align: -10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23999999' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z'/%3E%3Cpath d='M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z'/%3E%3C/svg%3E");
+  transition: opacity 0.2s linear;
+}
+
 .CommentPlugin_CommentsPanel_List_DeleteButton i.delete {
   background-size: contain;
   position: absolute;

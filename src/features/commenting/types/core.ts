@@ -16,6 +16,7 @@ export type Thread = {
   comments: Array<Comment>
   id: string
   quote: string
+  resolved?: boolean
   type: 'thread'
 }
 

@@ -22,6 +22,23 @@ body:not(.comments-disabled) .editor-container [data-lexical-mark].selected {
   background-color: rgba(255, 212, 0, 0.7);
 }
 
+/* Resolved mark node styling */
+.comments-enabled .editor-container [data-lexical-mark].resolved {
+  background-color: rgba(200, 200, 200, 0.2) !important;
+}
+
+.comments-enabled .editor-container [data-lexical-mark].resolved.selected {
+  background-color: rgba(200, 200, 200, 0.4) !important;
+}
+
+body:not(.comments-disabled) .editor-container [data-lexical-mark].resolved {
+  background-color: rgba(200, 200, 200, 0.2);
+}
+
+body:not(.comments-disabled) .editor-container [data-lexical-mark].resolved.selected {
+  background-color: rgba(200, 200, 200, 0.4);
+}
+
 mark {
   color: unset;
 }

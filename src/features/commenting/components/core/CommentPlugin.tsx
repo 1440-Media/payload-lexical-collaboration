@@ -6,6 +6,7 @@ import { useLexicalComposerContext } from '@payloadcms/richtext-lexical/lexical/
 import React, { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 
+import type { Thread } from '../../types/core.js'
 import type { CommentPluginProps } from '../../types/props.js'
 
 import { useCommentCommands } from '../../hooks/editor/useCommentCommands.js'
@@ -44,7 +45,7 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
   // Custom hooks
   const markNodeMap = useCommentMarks(editor, setActiveIDs, setActiveAnchorKey)
   const { isDocumentSaved, saveDocument } = useDocumentOperations(editor, documentId)
-  const { deleteAllComments, deleteCommentOrThread, submitAddComment } = useCommentOperations(
+  const { deleteAllComments, deleteCommentOrThread, resolveThread, submitAddComment } = useCommentOperations(
     commentStore, 
     editor, 
     markNodeMap, 
@@ -83,6 +84,20 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
       }
     }
   }, [activeIDs, editor, markNodeMap])
+
+  // Apply/remove resolved CSS class on mark node DOM elements
+  useEffect(() => {
+    const updateResolvedClass = (threadId: string, resolved: boolean) => {
+      markNodeMap.get(threadId)?.forEach((key) => {
+        const elem = editor.getElementByKey(key)
+        elem?.classList.toggle('resolved', resolved)
+      })
+    }
+
+    comments
+      .filter((c): c is Thread => c.type === 'thread')
+      .forEach((thread) => updateResolvedClass(thread.id, thread.resolved ?? false))
+  }, [comments, editor, markNodeMap])
 
   // Load comments when documentId changes
   useEffect(() => {
@@ -137,6 +152,7 @@ export const CommentPlugin: React.FC<CommentPluginProps> = ({
             deleteAllComments={deleteAllComments}
             deleteCommentOrThread={deleteCommentOrThread}
             markNodeMap={markNodeMap}
+            resolveThread={resolveThread}
             submitAddComment={submitAddComment}
           />,
           document.body,

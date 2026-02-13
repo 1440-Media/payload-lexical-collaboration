@@ -114,32 +114,25 @@ export class CommentOperations implements ICommentOperations {
           }
           const { index, markedComment } = deletionInfo
           
-          // Mark as deleted in the database using Payload's built-in REST API
-          await APIUtils.patch(`${API_ENDPOINTS.COMMENTS}/${comment.id}`, {
-            resolved: true, // Use resolved field to mark as deleted
-          })
+          // Delete from the database
+          await APIUtils.delete(`${API_ENDPOINTS.COMMENTS}/${comment.id}`)
           
           commentStore.addComment(markedComment, thread, index)
           return deletionInfo
         } else {
           commentStore.deleteCommentOrThread(comment)
           
-          // Mark thread as resolved in the database using Payload's built-in REST API
-          // Update all comments with this threadId
+          // Delete all comments in the thread from the database
           const threadId = comment.id
           const params = { 'where[threadId][equals]': threadId }
           const data = await APIUtils.getPaginated<CommentAPIEntity>(API_ENDPOINTS.COMMENTS, params)
-          
-          // For each comment in the thread, mark it as resolved
+
           if (data.docs && Array.isArray(data.docs)) {
-            const updatePromises = data.docs.map(async (threadComment: CommentAPIEntity) => {
-              return APIUtils.patch(`${API_ENDPOINTS.COMMENTS}/${threadComment.id}`, {
-                resolved: true,
-              })
+            const deletePromises = data.docs.map(async (threadComment: CommentAPIEntity) => {
+              return APIUtils.delete(`${API_ENDPOINTS.COMMENTS}/${threadComment.id}`)
             })
-            
-            // Wait for all updates to complete
-            await Promise.all(updatePromises)
+
+            await Promise.all(deletePromises)
           }
           
           // Remove ids from associated marks
@@ -173,6 +166,33 @@ export class CommentOperations implements ICommentOperations {
       },
       'Error deleting comment or thread',
       null
+    )
+  }
+
+  /**
+   * Resolve or unresolve a thread
+   */
+  async resolveThread(
+    commentStore: CommentStore,
+    editor: LexicalEditor,
+    markNodeMap: MarkNodeMapType,
+    thread: Thread,
+    resolved: boolean,
+  ): Promise<boolean> {
+    return withErrorHandling(
+      async () => {
+        const success = await commentStore.resolveThread(thread.id, resolved)
+        if (!success) {return false}
+
+        // Update mark node DOM classes
+        markNodeMap.get(thread.id)?.forEach((key) => {
+          editor.getElementByKey(key)?.classList.toggle('resolved', resolved)
+        })
+
+        return true
+      },
+      `Error ${resolved ? 'resolving' : 'unresolving'} thread ${thread.id}`,
+      false
     )
   }
 
