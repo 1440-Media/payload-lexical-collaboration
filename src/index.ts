@@ -9,6 +9,10 @@ export type PayloadLexicalCollaborationConfig = {
    */
   collections?: Partial<Record<CollectionSlug, true>>
   disabled?: boolean
+  /**
+   * Slug of the user collection (e.g. 'editors'). Defaults to 'users'.
+   */
+  userCollectionSlug?: string
 }
 
 export const payloadLexicalCollaboration =
@@ -49,7 +53,7 @@ export const payloadLexicalCollaboration =
         {
           name: 'author',
           type: 'relationship',
-          relationTo: 'users',
+          relationTo: pluginOptions.userCollectionSlug || 'users',
           required: true,
         },
         {

@@ -29,10 +29,13 @@ export class CommentStore implements CommentStoreInterface {
   _comments: Comments
   _editor: LexicalEditor
 
-  constructor(editor: LexicalEditor) {
+  constructor(editor: LexicalEditor, userCollectionSlug?: string) {
     this._comments = []
     this._editor = editor
     this._changeListeners = new Set()
+    if (userCollectionSlug) {
+      commentService.userCollectionSlug = userCollectionSlug
+    }
   }
 
   /**

@@ -14,12 +14,17 @@ export type CommentPluginProps = {
    * Current user's identifier (typically email)
    */
   currentUser: string
-  
+
   /**
    * ID of the document to load comments for
    * @default 'default'
    */
   documentId?: string
+
+  /**
+   * Slug of the user collection (e.g. 'editors'). Defaults to 'users'.
+   */
+  userCollectionSlug?: string
 }
 
 /**
@@ -214,4 +219,9 @@ export type CommentClientFeatureProps = {
    * @default true
    */
   enabled?: boolean
+
+  /**
+   * Slug of the user collection (e.g. 'editors'). Defaults to 'users'.
+   */
+  userCollectionSlug?: string
 }

@@ -17,6 +17,11 @@ import { getDocumentIdFromUrl } from '../utils/url.js'
  */
 export class CommentService implements ICommentService {
   /**
+   * Slug of the user collection. Defaults to 'users'.
+   */
+  userCollectionSlug = 'users'
+
+  /**
    * Extracts author email from a comment object
    * @param author Author object or string
    * @returns Author email
@@ -104,7 +109,7 @@ export class CommentService implements ICommentService {
     return withErrorHandling(
       async () => {
         const params = { 'where[email][equals]': email }
-        const userData = await APIUtils.getPaginated<UserAPIEntity>(API_ENDPOINTS.USERS, params)
+        const userData = await APIUtils.getPaginated<UserAPIEntity>(`/api/${this.userCollectionSlug}`, params)
         
         // Get the first user that matches the email
         return userData.docs && userData.docs.length > 0 ? userData.docs[0].id : null

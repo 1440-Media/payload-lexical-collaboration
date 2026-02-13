@@ -78,5 +78,4 @@ export type ErrorResponse = {
  */
 export const API_ENDPOINTS = {
   COMMENTS: '/api/lexical-collaboration-plugin-comments',
-  USERS: '/api/users'
 }

@@ -6,6 +6,10 @@ export type CommentFeatureProps = {
    * @default true
    */
   enabled?: boolean
+  /**
+   * Slug of the user collection (e.g. 'editors'). Defaults to 'users'.
+   */
+  userCollectionSlug?: string
 }
 
 export const CommentFeature = createServerFeature<
@@ -18,6 +22,7 @@ export const CommentFeature = createServerFeature<
       ClientFeature: 'payload-lexical-collaboration/client#CommentClientFeature',
       clientFeatureProps: {
         enabled: props?.enabled ?? true,
+        userCollectionSlug: props?.userCollectionSlug,
       },
     }
   },

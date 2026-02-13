@@ -27,12 +27,13 @@ import '../ui/CommentPlugin.css'
 export const CommentPlugin: React.FC<CommentPluginProps> = ({
   currentUser,
   documentId = 'default',
+  userCollectionSlug,
 }) => {
   // Editor context
   const [editor] = useLexicalComposerContext()
-  
+
   // Comment store
-  const commentStore = useMemo(() => new CommentStore(editor), [editor])
+  const commentStore = useMemo(() => new CommentStore(editor, userCollectionSlug), [editor, userCollectionSlug])
   const comments = useCommentStore(commentStore)
   
   // UI state

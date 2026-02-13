@@ -51,9 +51,10 @@ export const CommentClientFeature = createClientFeature<CommentClientFeatureProp
             return (
               <>
                 <CommentMarkStyles enabled={true} />
-                <CommentPlugin 
-                  currentUser={currentUser} 
-                  documentId={documentId} 
+                <CommentPlugin
+                  currentUser={currentUser}
+                  documentId={documentId}
+                  userCollectionSlug={props?.userCollectionSlug}
                 />
               </>
             )
