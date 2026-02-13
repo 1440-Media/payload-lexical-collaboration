@@ -1,0 +1,36 @@
+/**
+ * Disabled Mark Node Styling
+ * 
+ * This file overrides the default mark node styling when the plugin is disabled.
+ * It makes the mark nodes transparent while still keeping them registered in the editor.
+ */
+
+/* Hide mark node styling when disabled - with higher specificity */
+body.comments-disabled .editor-container [data-lexical-mark],
+body.comments-disabled [data-lexical-mark],
+body.comments-disabled *[data-lexical-mark],
+.comments-disabled .editor-container [data-lexical-mark] {
+  background-color: transparent !important;
+  background: none !important;
+  cursor: default !important;
+  border: none !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+body.comments-disabled .editor-container [data-lexical-mark].selected,
+body.comments-disabled [data-lexical-mark].selected,
+body.comments-disabled *[data-lexical-mark].selected,
+.comments-disabled .editor-container [data-lexical-mark].selected {
+  background-color: transparent !important;
+  background: none !important;
+}
+
+/* Additional rule to ensure mark nodes are not visible */
+body.comments-disabled mark,
+.comments-disabled mark {
+  background-color: transparent !important;
+  background: none !important;
+  color: inherit !important;
+}

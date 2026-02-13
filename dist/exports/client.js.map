@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/exports/client.ts"],"sourcesContent":["// BeforeDashboardClient removed\nexport { CommentClientFeature } from '../features/commenting/feature.client.js'\n"],"names":["CommentClientFeature"],"mappings":"AAAA,gCAAgC;AAChC,SAASA,oBAAoB,QAAQ,2CAA0C"}

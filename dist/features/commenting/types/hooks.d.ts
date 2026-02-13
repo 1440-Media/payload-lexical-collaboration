@@ -1,0 +1,81 @@
+/**
+ * Hook return types for the commenting feature
+ */
+import type { NodeKey, RangeSelection } from '@payloadcms/richtext-lexical/lexical';
+import type { Comment, CommentDeletionResult, Thread } from './core.js';
+/**
+ * Return type for useCommentOperations hook
+ */
+export type CommentOperationsResult = {
+    /**
+     * Delete all comments for the current document
+     */
+    deleteAllComments: () => Promise<boolean>;
+    /**
+     * Delete a comment or thread
+     */
+    deleteCommentOrThread: (comment: Comment | Thread, thread?: Thread) => Promise<CommentDeletionResult | null>;
+    /**
+     * Resolve or unresolve a thread
+     */
+    resolveThread: (thread: Thread, resolved: boolean) => Promise<boolean>;
+    /**
+     * Submit a new comment
+     */
+    submitAddComment: (commentOrThread: Comment | Thread, isInlineComment: boolean, thread?: Thread, selection?: null | RangeSelection) => Promise<void>;
+};
+/**
+ * Return type for useDocumentOperations hook
+ */
+export type DocumentOperationsResult = {
+    /**
+     * Check if the document exists
+     */
+    checkIfDocumentExists: () => Promise<boolean>;
+    /**
+     * Whether the document is saved
+     */
+    isDocumentSaved: boolean;
+    /**
+     * Save the document
+     */
+    saveDocument: () => Promise<boolean>;
+    /**
+     * Set whether the document is saved
+     */
+    setIsDocumentSaved: (saved: boolean) => void;
+};
+/**
+ * Return type for useCommentCommands hook
+ */
+export type CommentCommandsResult = {
+    /**
+     * Cancel adding a comment
+     */
+    cancelAddComment: () => void;
+    /**
+     * Add a comment
+     */
+    onAddComment: () => void;
+    /**
+     * Toggle showing comments
+     */
+    toggleComments: () => void;
+};
+/**
+ * Return type for useCommentMarks hook
+ */
+export type CommentMarksResult = {
+    /**
+     * Active anchor key
+     */
+    activeAnchorKey: NodeKey | null;
+    /**
+     * Active comment IDs
+     */
+    activeIDs: string[];
+    /**
+     * Map of mark node keys to IDs
+     */
+    markNodeMap: Map<string, Set<NodeKey>>;
+};

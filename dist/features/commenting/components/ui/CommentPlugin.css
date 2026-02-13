@@ -1,0 +1,23 @@
+/**
+ * Comment Plugin Styles
+ * 
+ * This file imports all the component-specific CSS files
+ * to maintain the same functionality while improving maintainability.
+ */
+
+/* Import Add Comment Box styles */
+@import '../../components/input/AddCommentBox.css';
+
+/* Import Comment Input Box styles */
+@import '../../components/input/CommentInputBox.css';
+
+/* Import Comments Button styles */
+@import './CommentsButton.css';
+
+/* Import Comments Panel styles */
+@import '../../components/display/CommentsPanel.css';
+
+/* Import Comment List and Thread styles */
+@import '../../components/display/CommentList.css';
+
+/* Mark Node styles are now imported conditionally via CommentMarkStyles component */
