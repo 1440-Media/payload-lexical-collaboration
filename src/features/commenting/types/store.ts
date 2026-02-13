@@ -44,6 +44,11 @@ export interface CommentStoreInterface {
    * Register a callback to be called when the store changes
    */
   registerOnChange(onChange: () => void): () => void
+
+  /**
+   * Resolve or unresolve a thread
+   */
+  resolveThread(threadId: string, resolved: boolean): Promise<boolean>
   
   /**
    * Save a comment or thread to the Payload API

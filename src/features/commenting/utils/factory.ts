@@ -34,12 +34,14 @@ export function createThread(
   quote: string,
   comments: Array<Comment>,
   id?: string,
+  resolved?: boolean,
 ): Thread {
   return {
     id: id === undefined ? createUID() : id,
     type: 'thread',
     comments,
     quote,
+    resolved,
   }
 }
 
@@ -52,6 +54,7 @@ export function cloneThread(thread: Thread): Thread {
     type: 'thread',
     comments: Array.from(thread.comments),
     quote: thread.quote,
+    resolved: thread.resolved,
   }
 }
 

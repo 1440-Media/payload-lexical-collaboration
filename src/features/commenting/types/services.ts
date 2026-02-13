@@ -27,13 +27,23 @@ export interface ICommentService {
   loadComments(documentId: string): Promise<Comments>
 
   /**
+   * Resolve a thread
+   */
+  resolveThread(threadId: string): Promise<boolean>
+
+  /**
    * Save a comment or thread
    */
   saveComment(
-    commentOrThread: Comment | Thread, 
-    thread?: Thread, 
+    commentOrThread: Comment | Thread,
+    thread?: Thread,
     documentId?: string
   ): Promise<boolean>
+
+  /**
+   * Unresolve a thread
+   */
+  unresolveThread(threadId: string): Promise<boolean>
 }
 
 /**
@@ -81,6 +91,17 @@ export interface ICommentOperations {
     thread?: Thread,
     saveDocumentCallback?: () => Promise<boolean | void>
   ): Promise<CommentDeletionResult | null>
+
+  /**
+   * Resolve or unresolve a thread
+   */
+  resolveThread(
+    commentStore: CommentStore,
+    editor: LexicalEditor,
+    markNodeMap: MarkNodeMapType,
+    thread: Thread,
+    resolved: boolean,
+  ): Promise<boolean>
 
   /**
    * Submit a new comment

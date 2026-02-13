@@ -14,14 +14,22 @@ export type CommentOperationsResult = {
    * Delete all comments for the current document
    */
   deleteAllComments: () => Promise<boolean>
-  
+
   /**
    * Delete a comment or thread
    */
   deleteCommentOrThread: (
-    comment: Comment | Thread, 
+    comment: Comment | Thread,
     thread?: Thread
   ) => Promise<CommentDeletionResult | null>
+
+  /**
+   * Resolve or unresolve a thread
+   */
+  resolveThread: (
+    thread: Thread,
+    resolved: boolean,
+  ) => Promise<boolean>
 
   /**
    * Submit a new comment

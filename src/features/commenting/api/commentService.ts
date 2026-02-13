@@ -84,11 +84,9 @@ export class CommentService implements ICommentService {
         
         const data = await APIUtils.getPaginated<CommentAPIEntity>(API_ENDPOINTS.COMMENTS, params)
         
-        // Mark all comments as resolved (deleted)
+        // Delete all comments
         const updatePromises = data.docs.map(async (comment: CommentAPIEntity) => {
-          return APIUtils.patch(`${API_ENDPOINTS.COMMENTS}/${comment.id}`, {
-            resolved: true,
-          })
+          return APIUtils.delete(`${API_ENDPOINTS.COMMENTS}/${comment.id}`)
         })
         
         // Wait for all updates to complete
@@ -134,13 +132,13 @@ export class CommentService implements ICommentService {
         const params = {
           'depth': '2',
           'where[documentId][equals]': documentId,
-          'where[resolved][equals]': 'false'
         }
         
         const data = await APIUtils.getPaginated<CommentAPIEntity>(API_ENDPOINTS.COMMENTS, params)
         
         // Group comments by threadId
         const threadMap = new Map<string, Comment[]>()
+        const threadResolvedMap = new Map<string, boolean>()
         
         // First pass: group comments by threadId
         data.docs.forEach((comment: CommentAPIEntity) => {
@@ -148,6 +146,12 @@ export class CommentService implements ICommentService {
           
           if (!threadMap.has(comment.threadId)) {
             threadMap.set(comment.threadId, [])
+            threadResolvedMap.set(comment.threadId, true)
+          }
+
+          // Track resolved status: thread is resolved only if ALL non-deleted comments are resolved
+          if (!comment.resolved) {
+            threadResolvedMap.set(comment.threadId, false)
           }
           
           // Get author email
@@ -189,7 +193,8 @@ export class CommentService implements ICommentService {
           // Add the thread ID to the set of generated IDs
           generatedIds.add(threadId)
           
-          const thread = createThread(quote, threadComments, threadId)
+          const resolved = threadResolvedMap.get(threadId) || false
+          const thread = createThread(quote, threadComments, threadId, resolved)
           comments.push(thread)
         })
         
@@ -197,6 +202,29 @@ export class CommentService implements ICommentService {
       },
       'Error loading comments',
       []
+    )
+  }
+
+  /**
+   * Resolves a thread by setting resolved: true on all its comments
+   */
+  async resolveThread(threadId: string): Promise<boolean> {
+    return withErrorHandling(
+      async () => {
+        const params = { 'where[threadId][equals]': threadId }
+        const data = await APIUtils.getPaginated<CommentAPIEntity>(API_ENDPOINTS.COMMENTS, params)
+
+        const updatePromises = data.docs.map(async (comment: CommentAPIEntity) => {
+          return APIUtils.patch(`${API_ENDPOINTS.COMMENTS}/${comment.id}`, {
+            resolved: true,
+          })
+        })
+
+        await Promise.all(updatePromises)
+        return true
+      },
+      `Error resolving thread ${threadId}`,
+      false
     )
   }
 
@@ -222,29 +250,52 @@ export class CommentService implements ICommentService {
         } else {
           generatedIds.add(commentOrThread.id)
         }
-        
+
         // Get the document ID from the URL if not provided
         const docId = documentId || getDocumentIdFromUrl()
-        
+
         // Save to Payload API
         if (commentOrThread.type === 'thread') {
           const threadObj = commentOrThread
-          
+
           // Save each comment in the thread
           for (const comment of threadObj.comments) {
             const success = await this.saveThreadComment(comment, threadObj, docId)
             if (!success) {return false}
           }
-          
+
           return true
         } else if (commentOrThread.type === 'comment' && thread) {
           // Save a comment that's part of a thread
           return await this.saveThreadComment(commentOrThread, thread, docId)
         }
-        
+
         return false
       },
       'Error saving comment',
+      false
+    )
+  }
+
+  /**
+   * Unresolves a thread by setting resolved: false on all its comments
+   */
+  async unresolveThread(threadId: string): Promise<boolean> {
+    return withErrorHandling(
+      async () => {
+        const params = { 'where[threadId][equals]': threadId }
+        const data = await APIUtils.getPaginated<CommentAPIEntity>(API_ENDPOINTS.COMMENTS, params)
+
+        const updatePromises = data.docs.map(async (comment: CommentAPIEntity) => {
+          return APIUtils.patch(`${API_ENDPOINTS.COMMENTS}/${comment.id}`, {
+            resolved: false,
+          })
+        })
+
+        await Promise.all(updatePromises)
+        return true
+      },
+      `Error unresolving thread ${threadId}`,
       false
     )
   }

@@ -75,22 +75,22 @@ export type CommentsPanelProps = {
    * IDs of active comments
    */
   activeIDs: Array<string>
-  
+
   /**
    * List of comments and threads
    */
   comments: Comments
-  
+
   /**
    * Current user's identifier (typically email)
    */
   currentUser: string
-  
+
   /**
    * Function to delete all comments
    */
   deleteAllComments?: () => Promise<boolean>
-  
+
   /**
    * Function to delete a comment or thread
    */
@@ -98,12 +98,20 @@ export type CommentsPanelProps = {
     commentOrThread: Comment | Thread,
     thread?: Thread,
   ) => void
-  
+
   /**
    * Map of mark node keys to IDs
    */
   markNodeMap: MarkNodeMapType
-  
+
+  /**
+   * Function to resolve/unresolve a thread
+   */
+  resolveThread: (
+    thread: Thread,
+    resolved: boolean,
+  ) => Promise<boolean>
+
   /**
    * Function to submit a new comment
    */
@@ -158,27 +166,32 @@ export type ThreadItemProps = {
    * Whether the thread is active
    */
   isActive: boolean
-  
+
   /**
    * Whether the thread is interactive
    */
   isInteractive: boolean
-  
+
   /**
    * Function to delete a comment
    */
   onDeleteComment: (commentId: string, thread: Thread) => void
-  
+
   /**
    * Function to delete a thread
    */
   onDeleteThread: (thread: Thread) => void
-  
+
+  /**
+   * Function to resolve/unresolve the thread
+   */
+  onResolveThread: () => void
+
   /**
    * Function to submit a reply
    */
   onSubmitReply: (content: string, thread: Thread) => void
-  
+
   /**
    * The thread to display
    */

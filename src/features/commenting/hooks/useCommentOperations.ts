@@ -10,6 +10,7 @@ import type { CommentOperationsResult } from '../types/hooks.js'
 
 import { commentOperations } from '../services/commentOperations.js'
 
+
 /**
  * Hook for handling comment operations
  * @param commentStore The comment store instance
@@ -60,6 +61,20 @@ export function useCommentOperations(
     [commentStore, editor, saveDocument]
   )
 
+  // Resolve or unresolve a thread
+  const resolveThread = useCallback(
+    (thread: Thread, resolved: boolean) => {
+      return commentOperations.resolveThread(
+        commentStore,
+        editor,
+        markNodeMap,
+        thread,
+        resolved,
+      )
+    },
+    [commentStore, editor, markNodeMap]
+  )
+
   // Delete all comments
   const deleteAllComments = useCallback(
     () => {
@@ -76,6 +91,7 @@ export function useCommentOperations(
   return {
     deleteAllComments,
     deleteCommentOrThread,
+    resolveThread,
     submitAddComment,
   }
 }

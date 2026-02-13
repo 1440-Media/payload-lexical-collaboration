@@ -176,6 +176,33 @@ export class CommentStore implements CommentStoreInterface {
   }
 
   /**
+   * Resolve or unresolve a thread
+   */
+  async resolveThread(threadId: string, resolved: boolean): Promise<boolean> {
+    return withErrorHandling(
+      async () => {
+        // Update local store
+        this._comments = this._comments.map((item) => {
+          if (item.type === 'thread' && item.id === threadId) {
+            const newThread = cloneThread(item)
+            newThread.resolved = resolved
+            return newThread
+          }
+          return item
+        })
+        triggerOnChange(this)
+
+        // Persist to API
+        return resolved
+          ? await commentService.resolveThread(threadId)
+          : await commentService.unresolveThread(threadId)
+      },
+      `Error ${resolved ? 'resolving' : 'unresolving'} thread ${threadId}`,
+      false
+    )
+  }
+
+  /**
    * Save a comment or thread to the Payload API
    */
   async saveComment(

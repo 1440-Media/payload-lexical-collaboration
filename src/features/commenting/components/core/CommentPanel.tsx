@@ -20,6 +20,7 @@ export const CommentsPanel: React.FC<CommentsPanelProps> = ({
   deleteAllComments,
   deleteCommentOrThread,
   markNodeMap,
+  resolveThread,
   submitAddComment,
 }) => {
   const listRef = useRef<HTMLUListElement>(null)
@@ -37,6 +38,10 @@ export const CommentsPanel: React.FC<CommentsPanelProps> = ({
     if (comment) {
       deleteCommentOrThread(comment, thread)
     }
+  }
+
+  const handleResolveThread = (thread: Thread) => {
+    void resolveThread(thread, !thread.resolved)
   }
 
   const handleDeleteThread = (thread: Thread) => {
@@ -120,6 +125,7 @@ export const CommentsPanel: React.FC<CommentsPanelProps> = ({
                   key={id}
                   onDeleteComment={(commentId) => handleDeleteComment(commentId, thread)}
                   onDeleteThread={handleDeleteThread}
+                  onResolveThread={() => handleResolveThread(thread)}
                   onSubmitReply={(content) => handleSubmitReply(content, thread)}
                   thread={thread}
                 />
